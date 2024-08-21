@@ -16,17 +16,13 @@ services:
       
   mobsf:
     environment: 
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mobsf
-      - POSTGRES_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=mobsf
+      - DB_HOST=postgres
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-       - POSTGRES=True
-    volumes:
-      - $HOME/MobSF/mobsf_data:/home/mobsf/.MobSF
     ports:
      - "8000:8000"
     networks:

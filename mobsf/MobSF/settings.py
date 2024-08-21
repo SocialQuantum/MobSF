@@ -34,8 +34,6 @@ DWD_DIR = os.path.join(MobSF_HOME, 'downloads/')
 SCREEN_DIR = os.path.join(MobSF_HOME, 'downloads/screen/')
 # Upload Directory
 UPLD_DIR = os.path.join(MobSF_HOME, 'uploads/')
-# Database Directory
-DB_DIR = os.path.join(MobSF_HOME, 'db.sqlite3')
 # Signatures used by modules
 SIGNATURE_DIR = os.path.join(MobSF_HOME, 'signatures/')
 # Tools Directory
@@ -145,28 +143,28 @@ APKPLZ = 'https://apkplz.net/download-app/'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 # Sqlite3 support
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': DB_DIR,
-    },
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': DB_DIR,
+#     },
+# }
 # End Sqlite3 support
 
 # Postgres DB - Install psycopg2
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mobsf',
-        'USER': os.environ['POSTGRES_USER'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': os.environ['POSTGRES_HOST'],
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': os.environ['DB_HOST'],
         'PORT': 5432,
     }
 }
 # End Postgres support
-"""
+
 # ===============================================
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 DEBUG = bool(os.getenv('MOBSF_DEBUG', '0') == '1')

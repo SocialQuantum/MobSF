@@ -15,6 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     USER_ID=9901 \
     MOBSF_PLATFORM=docker \
     MOBSF_ADB_BINARY=/usr/bin/adb \
+    MOBSF_DISABLE_AUTHENTICATION=1 \
     JDK_FILE=openjdk-20.0.2_linux-x64_bin.tar.gz \
     JDK_FILE_ARM=openjdk-20.0.2_linux-aarch64_bin.tar.gz \
     WKH_FILE=wkhtmltox_0.12.6.1-2.jammy_amd64.deb \
@@ -33,7 +34,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt update -y && apt install -y  --no-install-recommends \
     build-essential \
     locales \
-    sqlite3 \
     fontconfig-config \
     libjpeg-turbo8 \
     libxrender1 \
@@ -62,7 +62,7 @@ RUN ./install_java_wkhtmltopdf.sh
 
 # Install Python dependencies
 COPY poetry.lock pyproject.toml ./
-RUN python3 -m pip install --upgrade --no-cache-dir pip poetry==${POETRY_VERSION} && \
+RUN python3 -m pip install --upgrade --no-cache-dir pip psycopg2-binary poetry==${POETRY_VERSION} && \
     poetry config virtualenvs.create false && \
     poetry install --only main --no-root --no-interaction --no-ansi
 
@@ -84,18 +84,8 @@ WORKDIR /home/mobsf/Mobile-Security-Framework-MobSF
 # Copy source code
 COPY . .
 
-# Check if Postgres support needs to be enabled.
-# Disabled by default
-ARG POSTGRES=False
-
-ENV POSTGRES_USER=postgres \
-    POSTGRES_PASSWORD=password \
-    POSTGRES_DB=mobsf \
-    POSTGRES_HOST=postgres \
-    DJANGO_SUPERUSER_USERNAME=mobsf \
+ENV DJANGO_SUPERUSER_USERNAME=mobsf \
     DJANGO_SUPERUSER_PASSWORD=mobsf
-
-RUN ./scripts/postgres_support.sh $POSTGRES
 
 HEALTHCHECK CMD curl --fail http://host.docker.internal:8000/ || exit 1
 
