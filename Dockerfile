@@ -98,5 +98,9 @@ RUN groupadd --gid $USER_ID $MOBSF_USER && \
     chown -R $MOBSF_USER:$MOBSF_USER /home/mobsf
 USER $MOBSF_USER
 
+# Add external api key
+ARG api_key
+ENV MOBSF_API_KEY=$api_key
+
 # Run MobSF
 CMD ["/home/mobsf/Mobile-Security-Framework-MobSF/scripts/entrypoint.sh"]

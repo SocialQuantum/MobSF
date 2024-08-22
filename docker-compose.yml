@@ -23,6 +23,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        api_key: "a00a00a00a00a"
     ports:
      - "8000:8000"
     networks:
