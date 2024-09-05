@@ -1,0 +1,24 @@
+name: Fetch updates from upstream
+on:
+  workflow_dispatch:
+  schedule:
+     # run every 2nd day at 00:00
+    - cron:  '0 0 */2 * *'
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch updates
+        run: |
+          git config --global user.name 'Gleb Davydov'
+          git config --global user.email 'g.davydov@socialquantum.com'
+
+          git checkout master
+          git pull --unshallow
+
+          git remote add upstream https://github.com/MobSF/Mobile-Security-Framework-MobSF.git
+          git fetch upstream
+
+          git merge --no-edit upstream/master
+          git push origin master
