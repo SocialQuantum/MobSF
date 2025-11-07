@@ -9,6 +9,11 @@ import lief
 from mobsf.StaticAnalyzer.views.common.binary.strings import (
     strings_on_binary,
 )
+from mobsf.MobSF.utils import (
+    run_with_timeout,
+)
+
+from django.conf import settings
 
 
 def objdump_is_debug_symbol_stripped(macho_file):
@@ -28,7 +33,10 @@ class MachOChecksec:
             self.macho_name = rel_path
         else:
             self.macho_name = macho.name
-        self.macho = lief.parse(self.macho_path)
+        self.macho = run_with_timeout(
+            lief.parse,
+            settings.BINARY_ANALYSIS_TIMEOUT,
+            self.macho_path)
 
     def checksec(self):
         macho_dict = {}
@@ -234,15 +242,16 @@ class MachOChecksec:
         stk_guard = '___stack_chk_guard'
         imp_func_gen = self.macho.imported_functions
         has_stk_check = any(
-            str(func).strip() == stk_check for func in imp_func_gen)
+            str(func.name).strip() == stk_check for func in imp_func_gen)
         has_stk_guard = any(
-            str(func).strip() == stk_guard for func in imp_func_gen)
+            str(func.name).strip() == stk_guard for func in imp_func_gen)
 
         return has_stk_check and has_stk_guard
 
     def has_arc(self):
+        arc_funcs = ('_objc_release', '_swift_release')
         for func in self.macho.imported_functions:
-            if str(func).strip() in ('_objc_release', '_swift_release'):
+            if str(func.name).strip() in arc_funcs:
                 return True
         return False
 
@@ -277,7 +286,7 @@ class MachOChecksec:
                     # stripped and unstripped binaries
                     # also ignore radr://5614542
                     continue
-                if (i.type & 0xe0) > 0 or i.type in (0x0e, 0x1e):
+                if (i.type.value & 0xe0) > 0 or i.type.value in (0x0e, 0x1e):
                     # N_STAB set or 14, 30
 
                     # N_STAB	0xe0  /* if any of these bits set,
