@@ -174,7 +174,7 @@ DATABASES = {
     }
 }
 # End Postgres support
-"""
+
 # ===============================================
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 DEBUG = bool(os.getenv('MOBSF_DEBUG', '0') == '1')
@@ -301,7 +301,7 @@ LOGGING = {
         'logfile': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(MobSF_HOME, 'debug.log'),
+            'filename': os.path.join(MOBSF_HOME, 'debug.log'),
             'formatter': 'standard',
         },
         'console': {
