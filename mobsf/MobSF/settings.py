@@ -270,9 +270,9 @@ MEDIA_URL = '/uploads/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-# 256MB limit for file uploads
-DATA_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024 * 1024
-# 400MB per file limit for uncompressed files
+# 512MB limit for file uploads
+DATA_UPLOAD_MAX_MEMORY_SIZE = 512 * 1024 * 1024
+# 800MB per file limit for uncompressed files
 ZIP_MAX_UNCOMPRESSED_FILE_SIZE = 400 * 1024 * 1024
 # 3GB total limit for all uncompressed files
 ZIP_MAX_UNCOMPRESSED_TOTAL_SIZE = 3000 * 1024 * 1024
@@ -375,10 +375,10 @@ LOGGING = {
     },
 }
 ASYNC_ANALYSIS = bool(os.getenv('MOBSF_ASYNC_ANALYSIS', '0') == '1')
-ASYNC_ANALYSIS_TIMEOUT = int(os.getenv('MOBSF_ASYNC_ANALYSIS_TIMEOUT', '60'))
+ASYNC_ANALYSIS_TIMEOUT = int(os.getenv('MOBSF_ASYNC_ANALYSIS_TIMEOUT', '180'))
 Q_CLUSTER = {
     'name': 'scan_queue',
-    'workers': int(os.getenv('MOBSF_ASYNC_WORKERS', '2')),
+    'workers': int(os.getenv('MOBSF_ASYNC_WORKERS', '4')),
     'recycle': 100,
     'timeout': ASYNC_ANALYSIS_TIMEOUT * 60,
     'retry': (ASYNC_ANALYSIS_TIMEOUT * 60) + 100,
