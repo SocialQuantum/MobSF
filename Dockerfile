@@ -35,6 +35,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PATH=/jdk-22.0.2/bin:/root/.local/bin:$PATH \
     DJANGO_SUPERUSER_USERNAME=mobsf \
     DJANGO_SUPERUSER_PASSWORD=mobsf
+    MOBSF_DISABLE_AUTHENTICATION=1 \
 
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
 RUN apt update -y && \
