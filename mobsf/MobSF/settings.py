@@ -151,6 +151,31 @@ APKPLZ = 'https://apkplz.net/download-app/'
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
+if (os.environ.get('POSTGRES_USER')
+        and (os.environ.get('POSTGRES_PASSWORD')
+             or os.environ.get('POSTGRES_PASSWORD_FILE'))
+        and os.environ.get('POSTGRES_HOST')):
+    # Postgres support
+    default = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB', 'mobsf'),
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': get_secret_from_file_or_env('POSTGRES_PASSWORD'),
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': int(os.getenv('POSTGRES_PORT', 5432)),
+    }
+else:
+    # Sqlite3 support
+    default = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DB_DIR,
+    }
+DATABASES = {
+    'default': default,
+}
+
+# Database
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 # Sqlite3 support
 
 # DATABASES = {
@@ -163,16 +188,16 @@ APKPLZ = 'https://apkplz.net/download-app/'
 
 # Postgres DB - Install psycopg2
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': 5432,
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ['DB_NAME'],
+#         'USER': os.environ['DB_USER'],
+#         'PASSWORD': os.environ['DB_PASSWORD'],
+#         'HOST': os.environ['DB_HOST'],
+#         'PORT': 5432,
+#     }
+# }
 # End Postgres support
 
 # ===============================================
